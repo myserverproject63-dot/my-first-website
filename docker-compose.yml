@@ -1,10 +1,30 @@
-version: '3.8'
-
 services:
   web:
-    # このフォルダにあるDockerfileでビルドする指示
     build: .
-    # ポートの「窓口」を繋げる
     ports:
-      # ホストPCの8080ポートとコンテナの80ポートを紐付け
-      - "8080:80"
+      - "8080:5000"
+    
+    # ▼▼▼【重要】この 'environment' ブロックが正しいか確認 ▼▼▼
+    # ${...} ではなく、dbサービスと同じ値を直接書き込みます
+    environment:
+      POSTGRES_DB: myapp_db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: 63!-Ebc04 # (あなたが設定したパスワード)
+    # ▲▲▲ 確認ここまで ▲▲▲
+    
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/
+    # この環境変数は変更なし
+    environment:
+      POSTGRES_DB: myapp_db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mysecretpassword # (あなたが設定したパスワード)
+    restart: always
+
+volumes:
+  postgres_data:
