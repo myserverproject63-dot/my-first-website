@@ -3,15 +3,11 @@ services:
     build: .
     ports:
       - "8080:5000"
-    
-    # ▼▼▼【重要】この 'environment' ブロックが正しいか確認 ▼▼▼
-    # ${...} ではなく、dbサービスと同じ値を直接書き込みます
     environment:
-      POSTGRES_DB: myapp_db
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: 63!-Ebc04 # (あなたが設定したパスワード)
-    # ▲▲▲ 確認ここまで ▲▲▲
-    
+      # .env ファイルから値を読み込む
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       - db
 
@@ -19,11 +15,11 @@ services:
     image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/
-    # この環境変数は変更なし
     environment:
-      POSTGRES_DB: myapp_db
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mysecretpassword # (あなたが設定したパスワード)
+      # .env ファイルから値を読み込む
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
 
 volumes:
